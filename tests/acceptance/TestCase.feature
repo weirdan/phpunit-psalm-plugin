@@ -1241,3 +1241,24 @@ Feature: TestCase
     Then I see these errors
       | Type            | Message                                                                                                                              |
       | InvalidArgument | Argument 1 of NS\MyTestCase::testSomething expects int, string provided by NS\MyTestCase::provide():(iterable<string, list<string>>) |
+
+  @Mocks
+  Scenario: Usages of InvokationMocker are not flagged
+    Given I have the following code
+      """
+      use Psr\Log\LoggerInterface;
+
+      class LoggerTest extends TestCase
+      {
+          public function testLogging(): void
+          {
+              $logger = $this->createMock(LoggerInterface::class);
+              $logger->expects($this->atLeastOnce())
+                  ->method('critical')
+                  ->with('oh noez');
+              $logger->critical('oh noez');
+          }
+      }
+      """
+    When I run Psalm
+    Then I see no errors

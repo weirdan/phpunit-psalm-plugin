@@ -1,8 +1,12 @@
 <?php
 namespace PHPUnit\Framework\MockObject;
 
+use PHPUnit\Framework\Constraint\Constraint;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\Builder\InvocationMocker;
+use PHPUnit\Framework\MockObject\Builder\InvocationStubber;
+use PHPUnit\Framework\MockObject\Builder\ParametersMatch;
+use PHPUnit\Framework\MockObject\Rule\InvocationOrder;
 
 /**
  * @template T
@@ -52,4 +56,18 @@ interface MockObject
      * @throws RuntimeException
      */
     public function method($constraint);
+
+    /**
+     * @return InvocationStubber&MethodNameMatch
+     */
+    public function expects(InvocationOrder $invocationRule): InvocationMocker;
+}
+
+interface MethodNameMatch extends ParametersMatch
+{
+    /**
+     * @param Constraint|string $name
+     * @return ParametersMatch
+     */
+    public function method($name);
 }
